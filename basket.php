@@ -11,7 +11,7 @@ if ($_POST) {
 
 $products = null;
 if ($_SESSION["basket"]) {
-	$products = query("SELECT id, name FROM products WHERE id IN (%s)", array_keys($_SESSION["basket"]));
+	$products = query("SELECT id, name FROM products WHERE id IN (%s) AND visible = 1", array_keys($_SESSION["basket"]));
 }
 
 htmlHead("Basket");
