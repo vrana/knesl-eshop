@@ -27,6 +27,9 @@ function adminer_object() {
 			if ($field["field"] == "password" && $order) {
 				return "";
 			}
+			if ($field["field"] == "created_at" && !$order) {
+				return "";
+			}
 			return parent::fieldName($field, $order);
 		}
 		

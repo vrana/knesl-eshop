@@ -35,8 +35,8 @@ CREATE TABLE `orders` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
   `address` varchar(500) NOT NULL,
-  `created_at` datetime NOT NULL,
-  `status` enum('untaken','unpaid','billed','paid','canceled','sent') NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `status` enum('untaken','unpaid','billed','paid','canceled','sent') NOT NULL DEFAULT 'untaken',
   `payment_method` enum('cash-shop','cash-mail','account-shop','account-mail','card-shop','card-mail') NOT NULL,
   `variable_number` varchar(45) NOT NULL,
   `users_id` int(10) unsigned DEFAULT NULL,
@@ -45,6 +45,13 @@ CREATE TABLE `orders` (
   CONSTRAINT `fk_orders_users1` FOREIGN KEY (`users_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
+DELIMITER ;;
+
+CREATE TRIGGER `orders_bi` BEFORE INSERT ON `orders` FOR EACH ROW
+SET NEW.created_at = NOW();;
+
+DELIMITER ;
 
 DROP TABLE IF EXISTS `products`;
 CREATE TABLE `products` (
