@@ -1,4 +1,5 @@
 RewriteRule ^$ index.php [END]
+RewriteRule ^admin/$ admin/index.php [END]
 
 DirectoryIndex disabled
 RewriteEngine on
