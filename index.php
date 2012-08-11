@@ -1,3 +1,3 @@
 <?php
 
-htmlHead("Home");
+htmlHead("eShop");

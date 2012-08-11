@@ -4,12 +4,7 @@ function htmlHead($title, $active_url = "") {
 	if (!array_key_exists("csrf", $_SESSION)) {
 		$_SESSION["csrf"] = md5(uniqid(rand(), true));
 	}
-	
-	$categories = array();
-	foreach (query("SELECT * FROM categories") as $row) {
-		$categories[$row["category_id"]][] = $row;
-	}
-	
+	db();
 	?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <html lang="en">
@@ -18,6 +13,31 @@ function htmlHead($title, $active_url = "") {
 <link rel="stylesheet" type="text/css" href="<?=h(rsrc('default.css'))?>">
 <script type="text/javascript" src="<?=h(rsrc('functions.js'))?>"></script>
 <body>
+
+<div id="content">
+<h1><?=h($title)?></h1>
+
+<?php
+	if (array_key_exists("messages", $_SESSION)) {
+		foreach ($_SESSION["messages"] as $message) {
+			echo "<p>" . h($message) . "</p>\n";
+		}
+		$_SESSION["messages"] = array();
+	}
+	
+	register_shutdown_function('htmlFoot');
+}
+
+function htmlFoot() {
+	$categories = array();
+	foreach (query("SELECT * FROM categories") as $row) {
+		$categories[$row["category_id"]][] = $row;
+	}
+	?>
+</div>
+
+<div id="menu">
+<p><h3><a href="<?=href('')?>">eShop</a></h3></p>
 
 <? if (!isset($_SESSION["username"])) { ?>
 	<form action="<?=href('login/')?>" method="post">
@@ -37,16 +57,11 @@ function htmlHead($title, $active_url = "") {
 	</form>
 <? } ?>
 
-<h1><?=h($title)?></h1>
-
 <?php
-	if (array_key_exists("messages", $_SESSION)) {
-		foreach ($_SESSION["messages"] as $message) {
-			echo "<p>" . h($message) . "</p>\n";
-		}
-		$_SESSION["messages"] = array();
-	}
 	printCategories($categories, $active_url);
+	?>
+</div>
+<?php
 }
 
 function printCategories($categories, $active_url, $key = "") {
