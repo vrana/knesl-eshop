@@ -16,7 +16,7 @@ if ($_POST) {
 			$error = "<p>Not enough supply.</p>\n";
 		} else {
 			$_SESSION["basket"][$_POST["id"]] += $_POST["amount"];
-			redirect("cat/$row[url]/", "Item inserted to basket.");
+			redirect("cat/$row[url]/", "Item inserted to <a href='" . href('basket/') . "'>basket</a>.");
 		}
 	}
 }

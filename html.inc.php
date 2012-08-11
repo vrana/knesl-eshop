@@ -20,7 +20,7 @@ function htmlHead($title, $active_url = "") {
 <?php
 	if (array_key_exists("messages", $_SESSION)) {
 		foreach ($_SESSION["messages"] as $message) {
-			echo "<p>" . h($message) . "</p>\n";
+			echo "<p>$message</p>\n";
 		}
 		$_SESSION["messages"] = array();
 	}
