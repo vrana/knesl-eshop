@@ -29,6 +29,7 @@ php_value magic_quotes_runtime off
 php_value mbstring.func_overload 0
 php_value session.auto_start on
 php_value session.use_cookies on
+php_value session.use_only_cookies on
 php_value session.use_trans_sid off
 php_value short_open_tag on
 php_value variables_order GPCS
