@@ -1,6 +1,10 @@
 <?php
 
 function htmlHead($title, $active_url = "") {
+	if (!array_key_exists("csrf", $_SESSION)) {
+		$_SESSION["csrf"] = md5(uniqid(rand(), true));
+	}
+	
 	$categories = array();
 	foreach (query("SELECT * FROM categories") as $row) {
 		$categories[$row["category_id"]][] = $row;
@@ -26,6 +30,7 @@ function htmlHead($title, $active_url = "") {
 <? } else { ?>
 	<form action="<?=href('logout/')?>" method="post">
 	<p>
+	<input type="hidden" name="csrf" value="<?=$_SESSION["csrf"]?>">
 	Username: <b><?=h($_SESSION["username"])?></b>
 	<input type="submit" value="Logout">
 	</p>
@@ -39,7 +44,7 @@ function htmlHead($title, $active_url = "") {
 }
 
 function printCategories($categories, $active_url, $key = "") {
-	if (!isset($categories[$key])) {
+	if (!array_key_exists($key, $categories)) {
 		return;
 	}
 	echo "<ul>\n";

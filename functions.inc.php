@@ -52,6 +52,13 @@ function redirect($path) {
 	exit;
 }
 
+function checkCSRF() {
+	if ($_POST["csrf"] !== $_SESSION["csrf"]) {
+		return false;
+	}
+	return true;
+}
+
 function href($path) {
 	return substr(dirname(".$_SERVER[PHP_SELF]"), 1) . "/$path";
 }
