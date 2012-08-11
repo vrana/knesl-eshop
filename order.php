@@ -57,6 +57,8 @@ if ($_POST) {
 			
 			if (!$error) {
 				query("COMMIT");
+				$_SESSION["basket"] = array();
+				redirect('', "Order successful.");
 			}
 		}
 		query("ROLLBACK");
