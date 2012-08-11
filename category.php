@@ -5,7 +5,7 @@ if (!$row) {
 }
 
 $error = "";
-if ($_POST["id"]) {
+if ($_POST) {
 	if (!checkCSRF()) {
 		$error = "<p>Invalid CSRF token.</p>\n";
 	} else if ($_POST["amount"] <= 0) {

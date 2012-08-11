@@ -33,7 +33,7 @@ function query($sql /*, ... */) {
 	array_shift($args);
 	foreach ($args as $key => $val) {
 		if (is_array($val)) {
-			$args[$key] = implode(", ", array_map(array($db, 'quote'), $args));
+			$args[$key] = implode(", ", array_map(array($db, 'quote'), $val));
 		} elseif (!ctype_digit($val)) {
 			$args[$key] = $db->quote($val);
 		}

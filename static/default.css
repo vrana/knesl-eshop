@@ -1,3 +1,4 @@
 .active-category { font-weight: bold; }
+.number { text-align: right; }
 #menu { position: absolute; top: 0; left: 0; width: 19em; padding-left: 1em; }
 #content { margin-left: 21em; }

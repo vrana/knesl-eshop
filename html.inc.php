@@ -38,6 +38,7 @@ function htmlFoot() {
 
 <div id="menu">
 <p><h3><a href="<?=href('')?>">eShop</a></h3></p>
+<p><a href="<?=href('basket/')?>">Basket</a></p>
 
 <? if (!isset($_SESSION["username"])) { ?>
 	<form action="<?=href('login/')?>" method="post">
