@@ -36,8 +36,8 @@ CREATE TABLE `orders` (
   `name` varchar(100) NOT NULL,
   `address` varchar(500) NOT NULL,
   `created_at` datetime NOT NULL,
-  `status` int(10) unsigned NOT NULL,
-  `payment_method` int(10) unsigned NOT NULL,
+  `status` enum('untaken','unpaid','billed','paid','canceled','sent') NOT NULL,
+  `payment_method` enum('cash-shop','cash-mail','account-shop','account-mail','card-shop','card-mail') NOT NULL,
   `variable_number` varchar(45) NOT NULL,
   `users_id` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -52,7 +52,7 @@ CREATE TABLE `products` (
   `about` text NOT NULL,
   `amount` decimal(8,0) DEFAULT NULL,
   `price` decimal(10,2) DEFAULT NULL,
-  `visible` tinyint(4) DEFAULT '0',
+  `visible` tinyint(1) NOT NULL DEFAULT '0',
   `categories_id` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_products_categories` (`categories_id`),
@@ -66,7 +66,7 @@ CREATE TABLE `users` (
   `username` varchar(200) NOT NULL,
   `password` char(50) NOT NULL,
   `salt` char(10) NOT NULL DEFAULT '',
-  `admin` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `admin` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `username_UNIQUE` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
