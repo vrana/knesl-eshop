@@ -45,6 +45,7 @@ function query($sql /*, ... */) {
 function pageNotFound() {
 	header("HTTP/1.1 404 Not Found");
 	htmlHead("Page Not Found");
+	exit;
 }
 
 function redirect($path) {
