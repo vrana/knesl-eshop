@@ -3,13 +3,14 @@
 /** @return PDO */
 function db() {
 	static $db;
-	if (!$db) {
+	if ($db === null) {
 		try {
 			$db = new PDO("mysql:dbname=eshop", "web", "", array(
 				PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
 				PDO::MYSQL_ATTR_INIT_COMMAND => "SET CHARACTER SET utf8",
 			));
 		} catch (Exception $ex) {
+			$db = false;
 			header("HTTP/1.1 503 Service Unavailable");
 			htmlHead("Unable to connect to database");
 			exit;
@@ -24,17 +25,21 @@ function db() {
 * @return PDOStatement
 */
 function query($sql /*, ... */) {
+	$db = db();
+	if (!$db) {
+		return array();
+	}
 	$args = func_get_args();
 	array_shift($args);
 	foreach ($args as $key => $val) {
 		if (is_array($val)) {
-			$args[$key] = array_map(array(db(), 'quote'), $args);
+			$args[$key] = implode(", ", array_map(array($db, 'quote'), $args));
 		} elseif (!ctype_digit($val)) {
-			$args[$key] = db()->quote($val);
+			$args[$key] = $db->quote($val);
 		}
 	}
 	$sql = vsprintf($sql, $args);
-	return db()->query($sql);
+	return $db->query($sql);
 }
 
 function pageNotFound() {
