@@ -1,6 +1,6 @@
 <?php
 
-function htmlHead($title) {
+function htmlHead($title, $active_url = "") {
 	$categories = array();
 	foreach (query("SELECT * FROM categories") as $row) {
 		$categories[$row["category_id"]][] = $row;
@@ -35,18 +35,18 @@ function htmlHead($title) {
 <h1><?=h($title)?></h1>
 
 <?php
-	printCategories($categories);
+	printCategories($categories, $active_url);
 }
 
-function printCategories($categories, $key = "") {
+function printCategories($categories, $active_url, $key = "") {
 	if (!isset($categories[$key])) {
 		return;
 	}
 	echo "<ul>\n";
 	foreach ($categories[$key] as $row) {
-		$attrs = ($_GET["url"] == $row["url"] ? " class='active-category'" : "");
+		$attrs = ($active_url == $row["url"] ? " class='active-category'" : "");
 		echo "<li><a href='" . href("cat/$row[url]/") . "'$attrs>" . h($row["name"]) . "</a>\n";
-		printCategories($categories, $row["id"]);
+		printCategories($categories, $active_url, $row["id"]);
 	}
 	echo "</ul>\n";
 }

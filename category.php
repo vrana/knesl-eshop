@@ -5,7 +5,7 @@ if (!$row) {
 }
 $products = query("SELECT id, name, about, price FROM products WHERE categories_id = %d AND visible = 1", $row["id"]);
 
-htmlHead($row["name"]);
+htmlHead($row["name"], $row["url"]);
 foreach ($products as $product) {
 	echo "<h3>" . h($product["name"]) . "</h3>\n";
 	echo "<p>" . h($product["about"]) . "</p>\n";
