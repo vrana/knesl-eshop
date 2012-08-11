@@ -100,3 +100,10 @@ function buyProduct() {
 	}
 	$_SESSION["basket"][$_POST["id"]] += $_POST["amount"];
 }
+
+function getOrdered(array $products_ids) {
+	if (!$products_ids) {
+		return array();
+	}
+	return query("SELECT products_id, SUM(amount) FROM order_items WHERE products_id IN (%s)", $products_ids)->fetchAll(PDO::FETCH_KEY_PAIR);
+}

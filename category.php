@@ -12,12 +12,16 @@ if ($_POST) {
 	}
 }
 
-$products = query("SELECT id, name, about, price FROM products WHERE categories_id = %d AND visible = 1", $row["id"]);
+$products = array();
+foreach (query("SELECT id, name, about, price FROM products WHERE categories_id = %d AND visible = 1", $row["id"]) as $product) {
+	$products[$product["id"]] = $product;
+}
+$ordered = getOrdered(array_keys($products));
 
 htmlHead($row["name"], $row["url"]);
 echo $error;
 
-foreach ($products as $product) {
+foreach ($products as $id => $product) {
 	echo "<h3>" . h($product["name"]) . "</h3>\n";
 	echo "<p>" . h($product["about"]) . "</p>\n";
 	?>
@@ -25,9 +29,10 @@ foreach ($products as $product) {
 <p>
 <b><?=$product["price"]?></b>
 <input type="hidden" name="csrf" value="<?=$_SESSION["csrf"]?>">
-<input type="hidden" name="id" value="<?=$product["id"]?>">
+<input type="hidden" name="id" value="<?=$id?>">
 <input name="amount" value="1" size="3">
 <input type="submit" name="button" value="Buy">
+Already ordered: <span id="ordered-<?=$id?>"><?=($ordered[$id] ? $ordered[$id] : "0")?></span>
 </p>
 </form>
 <?php
