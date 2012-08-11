@@ -6,18 +6,9 @@ if (!$row) {
 
 $error = "";
 if ($_POST) {
-	if (!checkCSRF()) {
-		$error = "<p>Invalid CSRF token.</p>\n";
-	} else if ($_POST["amount"] <= 0) {
-		$error = "<p>Invalid amount.</p>\n";
-	} else {
-		$amount = query("SELECT amount FROM products WHERE id = %d", $_POST["id"])->fetchColumn();
-		if ($amount !== null && $_SESSION["basket"][$_POST["id"]] + $_POST["amount"] > $amount) {
-			$error = "<p>Not enough supply.</p>\n";
-		} else {
-			$_SESSION["basket"][$_POST["id"]] += $_POST["amount"];
-			redirect("cat/$row[url]/", "Item inserted to <a href='" . href('basket/') . "'>basket</a>.");
-		}
+	$error = buyProduct();
+	if (!$error) {
+		redirect("cat/$row[url]/", "Item inserted to <a href='" . href('basket/') . "'>basket</a>.");
 	}
 }
 
@@ -30,13 +21,13 @@ foreach ($products as $product) {
 	echo "<h3>" . h($product["name"]) . "</h3>\n";
 	echo "<p>" . h($product["about"]) . "</p>\n";
 	?>
-<form action="" method="post">
+<form action="" method="post" onsubmit="return !buySubmit('<?=href('buy/')?>', this);">
 <p>
 <b><?=$product["price"]?></b>
 <input type="hidden" name="csrf" value="<?=$_SESSION["csrf"]?>">
 <input type="hidden" name="id" value="<?=$product["id"]?>">
 <input name="amount" value="1" size="3">
-<input type="submit" value="Buy">
+<input type="submit" name="button" value="Buy">
 </p>
 </form>
 <?php

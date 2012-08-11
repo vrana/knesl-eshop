@@ -86,3 +86,17 @@ function optionlist($options, $selected = null) {
 }
 
 include "./html.inc.php";
+
+/** @return string error */
+function buyProduct() {
+	if (!checkCSRF()) {
+		return "Invalid CSRF token.";
+	} else if ($_POST["amount"] <= 0) {
+		return "Invalid amount.";
+	}
+	$amount = query("SELECT amount FROM products WHERE id = %d AND visible = 1", $_POST["id"])->fetchColumn();
+	if ($amount !== null && $_SESSION["basket"][$_POST["id"]] + $_POST["amount"] > $amount) {
+		return "Not enough supply.";
+	}
+	$_SESSION["basket"][$_POST["id"]] += $_POST["amount"];
+}

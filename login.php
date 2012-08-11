@@ -1,5 +1,5 @@
 <?php
-$row = query("SELECT id FROM users WHERE username = %s AND password = SHA1(CONCAT(%s, salt))", $_POST["username"], $_POST["password"])->fetchColumn();
+$row = query("SELECT id FROM users WHERE username = %s AND password = SHA1(CONCAT(%s, salt))", $_POST["username"], $_POST["password"])->fetch();
 if ($row) {
 	session_regenerate_id();
 	$_SESSION["userid"] = $row["id"];
