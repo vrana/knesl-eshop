@@ -74,7 +74,12 @@ function htmlHead($title) {
 	</p>
 	</form>
 <? } else { ?>
-	<p>Username: <b><?=h($_SESSION["username"])?></b></p>
+	<form action="<?=href('logout/')?>" method="post">
+	<p>
+	Username: <b><?=h($_SESSION["username"])?></b>
+	<input type="submit" value="Logout">
+	</p>
+	</form>
 <? } ?>
 
 <h1><?=h($title)?></h1>
