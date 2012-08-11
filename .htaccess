@@ -1,0 +1,28 @@
+RewriteRule ^$ index.php [END]
+
+DirectoryIndex disabled
+RewriteEngine on
+#~ RewriteBase /
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^static/.+ - [END]
+RewriteRule ^favicon\.ico$ - [END]
+RewriteRule ^robots\.txt$ - [END]
+RewriteRule .*[^/]$ $0/ [R=301,L]
+RewriteRule ^ 404.php [END]
+
+#~ php_value allow_url_fopen on
+php_value arg_separator.input &
+php_value arg_separator.output &
+php_value auto_prepend_file ./functions.inc.php
+php_value default_charset utf-8
+php_value default_mimetype text/html
+#~ php_value file_uploads on
+php_value filter.default unsafe_raw
+php_value filter.flags none
+php_value magic_quotes_gpc off
+php_value magic_quotes_runtime off
+php_value mbstring.func_overload 0
+php_value session.use_cookies on
+php_value session.use_trans_sid off
+php_value short_open_tag on
+php_value variables_order GPCS
