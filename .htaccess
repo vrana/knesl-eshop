@@ -1,4 +1,5 @@
 RewriteRule ^$ index.php [END]
+RewriteRule ^cat/(.+)/$ category.php?url=$1 [END]
 RewriteRule ^login/$ login.php [END]
 RewriteRule ^logout/$ logout.php [END]
 RewriteRule ^admin/$ admin/index.php [END]

@@ -44,7 +44,7 @@ function printCategories($categories, $key = "") {
 	}
 	echo "<ul>\n";
 	foreach ($categories[$key] as $row) {
-		echo "<li>" . h($row["name"]) . "\n";
+		echo "<li><a href='" . href("cat/$row[url]/") . "'>" . h($row["name"]) . "</a>\n";
 		printCategories($categories, $row["id"]);
 	}
 	echo "</ul>\n";
