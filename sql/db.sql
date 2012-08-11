@@ -17,7 +17,7 @@ CREATE TABLE `categories` (
 
 DROP TABLE IF EXISTS `order_items`;
 CREATE TABLE `order_items` (
-  `id` int(10) unsigned NOT NULL,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `price` decimal(10,2) NOT NULL,
   `amount` int(10) unsigned DEFAULT NULL,
   `orders_id` int(10) unsigned NOT NULL,
@@ -32,7 +32,7 @@ CREATE TABLE `order_items` (
 
 DROP TABLE IF EXISTS `orders`;
 CREATE TABLE `orders` (
-  `id` int(10) unsigned NOT NULL,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
   `address` varchar(500) NOT NULL,
   `created_at` datetime NOT NULL,
@@ -48,7 +48,7 @@ CREATE TABLE `orders` (
 
 DROP TABLE IF EXISTS `products`;
 CREATE TABLE `products` (
-  `id` int(10) unsigned NOT NULL,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `about` text NOT NULL,
   `amount` decimal(8,0) DEFAULT NULL,
   `price` decimal(10,2) DEFAULT NULL,
@@ -62,11 +62,22 @@ CREATE TABLE `products` (
 
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
-  `id` int(10) unsigned NOT NULL,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `username` varchar(200) NOT NULL,
   `password` char(50) NOT NULL,
-  `salt` char(10) NOT NULL,
+  `salt` char(10) NOT NULL DEFAULT '',
   `admin` tinyint(3) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `username_UNIQUE` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+DELIMITER ;;
+
+CREATE TRIGGER `users_bi` BEFORE INSERT ON `users` FOR EACH ROW
+SET NEW.salt = SUBSTR(RAND(), 3, 10), NEW.password = SHA1(CONCAT(NEW.password, NEW.salt));;
+
+CREATE TRIGGER `users_bu` BEFORE UPDATE ON `users` FOR EACH ROW
+SET NEW.salt = OLD.salt, NEW.password = IF(NEW.password != '' AND NEW.password != OLD.password, SHA1(CONCAT(NEW.password, NEW.salt)), OLD.password);;
+
+DELIMITER ;

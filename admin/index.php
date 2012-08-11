@@ -19,6 +19,23 @@ function adminer_object() {
 			return true;
 		}
 		
+		function fieldName($field, $order = 0) {
+			if ($field["field"] == "salt") {
+				return "";
+			}
+			if ($field["field"] == "password" && $order) {
+				return "";
+			}
+			return parent::fieldName($field, $order);
+		}
+		
+		function editVal($val, $field) {
+			if ($field["field"] == "password") {
+				return "";
+			}
+			return parent::editVal($val, $field);
+		}
+		
 	}
 	
 	return new AdminerEshop;
