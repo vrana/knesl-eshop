@@ -11,8 +11,13 @@ if ($_POST["id"]) {
 	} else if ($_POST["amount"] <= 0) {
 		$error = "<p>Invalid amount.</p>\n";
 	} else {
-		$_SESSION["basket"][$_POST["id"]] += $_POST["amount"];
-		redirect("cat/$row[url]/");
+		$amount = query("SELECT amount FROM products WHERE id = %d", $_POST["id"])->fetchColumn();
+		if ($amount !== null && $_SESSION["basket"][$_POST["id"]] + $_POST["amount"] > $amount) {
+			$error = "<p>Not enough supply.</p>\n";
+		} else {
+			$_SESSION["basket"][$_POST["id"]] += $_POST["amount"];
+			redirect("cat/$row[url]/");
+		}
 	}
 }
 
