@@ -44,7 +44,8 @@ function printCategories($categories, $key = "") {
 	}
 	echo "<ul>\n";
 	foreach ($categories[$key] as $row) {
-		echo "<li><a href='" . href("cat/$row[url]/") . "'>" . h($row["name"]) . "</a>\n";
+		$attrs = ($_GET["url"] == $row["url"] ? " class='active-category'" : "");
+		echo "<li><a href='" . href("cat/$row[url]/") . "'$attrs>" . h($row["name"]) . "</a>\n";
 		printCategories($categories, $row["id"]);
 	}
 	echo "</ul>\n";
