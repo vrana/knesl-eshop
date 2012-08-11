@@ -42,10 +42,13 @@ function htmlFoot() {
 
 <? if (!isset($_SESSION["username"])) { ?>
 	<form action="<?=href('login/')?>" method="post">
+	<table cellspacing="0">
+	<tr><th>Username<td><input name="username" value="<?=h($_POST["username"])?>">
+	<tr><th>Password<td><input type="password" name="password" value="<?=h($_POST["password"])?>">
+	</table>
 	<p>
-	<input name="username" value="<?=h($_POST["username"])?>">
-	<input type="password" name="password">
 	<input type="submit" value="Login">
+	<a href="<?=href('registration/')?>">Register</a>
 	</p>
 	</form>
 <? } else { ?>
