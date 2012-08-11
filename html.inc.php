@@ -1,6 +1,11 @@
 <?php
 
 function htmlHead($title) {
+	$categories = array();
+	foreach (query("SELECT * FROM categories") as $row) {
+		$categories[$row["category_id"]][] = $row;
+	}
+	
 	?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <html lang="en">
@@ -30,4 +35,17 @@ function htmlHead($title) {
 <h1><?=h($title)?></h1>
 
 <?php
+	printCategories($categories);
+}
+
+function printCategories($categories, $key = "") {
+	if (!isset($categories[$key])) {
+		return;
+	}
+	echo "<ul>\n";
+	foreach ($categories[$key] as $row) {
+		echo "<li>" . h($row["name"]) . "\n";
+		printCategories($categories, $row["id"]);
+	}
+	echo "</ul>\n";
 }
