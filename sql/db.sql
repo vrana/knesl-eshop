@@ -7,7 +7,7 @@ DROP TABLE IF EXISTS `categories`;
 CREATE TABLE `categories` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `category_id` int(10) unsigned DEFAULT NULL,
-  `name` varchar(200) DEFAULT NULL,
+  `name` varchar(200) NOT NULL,
   `url` varchar(200) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `url_UNIQUE` (`url`),
@@ -19,7 +19,7 @@ DROP TABLE IF EXISTS `order_items`;
 CREATE TABLE `order_items` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `price` decimal(10,2) NOT NULL,
-  `amount` int(10) unsigned DEFAULT NULL,
+  `amount` int(10) unsigned NOT NULL,
   `orders_id` int(10) unsigned NOT NULL,
   `products_id` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
@@ -49,6 +49,7 @@ CREATE TABLE `orders` (
 DROP TABLE IF EXISTS `products`;
 CREATE TABLE `products` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
   `about` text NOT NULL,
   `amount` decimal(8,0) DEFAULT NULL,
   `price` decimal(10,2) DEFAULT NULL,
