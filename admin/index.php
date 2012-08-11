@@ -4,7 +4,7 @@ function adminer_object() {
 	class AdminerEshop extends Adminer {
 		
 		function name() {
-			return 'eShop';
+			return '<a href=".." id="h1">eShop</a>';
 		}
 		
 		function credentials() {
@@ -16,7 +16,8 @@ function adminer_object() {
 		}
 		
 		function login($login, $password) {
-			return true;
+			$connection = connection();
+			return (bool) $connection->result("SELECT COUNT(*) FROM " . idf_escape($this->database()) . ".users WHERE username = " . q($login) . " AND password = SHA1(CONCAT(" . q($password) . ", salt)) AND admin = 1");
 		}
 		
 		function fieldName($field, $order = 0) {
