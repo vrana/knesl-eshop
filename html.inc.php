@@ -40,6 +40,12 @@ function htmlHead($title, $active_url = "") {
 <h1><?=h($title)?></h1>
 
 <?php
+	if (array_key_exists("messages", $_SESSION)) {
+		foreach ($_SESSION["messages"] as $message) {
+			echo "<p>" . h($message) . "</p>\n";
+		}
+		$_SESSION["messages"] = array();
+	}
 	printCategories($categories, $active_url);
 }
 

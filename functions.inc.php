@@ -48,7 +48,10 @@ function pageNotFound() {
 	exit;
 }
 
-function redirect($path) {
+function redirect($path, $message = "") {
+	if ($message) {
+		$_SESSION["messages"][] = $message;
+	}
 	header("Location: " . href($path));
 	exit;
 }
