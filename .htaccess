@@ -1,6 +1,7 @@
 RewriteRule ^$ index.php [END]
 RewriteRule ^cat/(.+)/$ category.php?url=$1 [END]
 RewriteRule ^buy/$ buy.php [END]
+RewriteRule ^ordered/$ ordered.php [QSA,END]
 RewriteRule ^basket/$ basket.php [END]
 RewriteRule ^order/$ order.php [END]
 RewriteRule ^registration/$ registration.php [END]

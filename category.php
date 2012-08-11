@@ -37,3 +37,11 @@ Already ordered: <span id="ordered-<?=$id?>"><?=($ordered[$id] ? $ordered[$id] :
 </form>
 <?php
 }
+
+if ($products) {
+	?>
+	<script type="text/javascript">
+	loadOrdered('<?=href("ordered/")?>?ids=<?=implode("-", array_keys($products))?>');
+	</script>
+<?php
+}

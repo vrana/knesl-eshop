@@ -21,3 +21,18 @@ function buySubmit(url, form) {
 	}, new FormData(form));
 	return true;
 }
+
+function loadOrdered(url) {
+	var load = function () {
+		setTimeout(function () {
+			ajax(url, function (json) {
+				var ordered = eval('(' + json + ')');
+				for (var id in ordered) {
+					document.getElementById('ordered-' + id).innerHTML = ordered[id];
+				}
+				load();
+			});
+		}, 10000);
+	};
+	load();
+}
