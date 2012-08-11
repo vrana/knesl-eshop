@@ -35,4 +35,5 @@ if (!$products) {
 <?php
 	}
 	echo "</table>\n";
+	echo "<p><a href='" . href('order/') . "'>Order</a></p>\n";
 }

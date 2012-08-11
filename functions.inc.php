@@ -32,9 +32,11 @@ function query($sql /*, ... */) {
 	$args = func_get_args();
 	array_shift($args);
 	foreach ($args as $key => $val) {
-		if (is_array($val)) {
+		if ($val === null) {
+			$args[$key] = 'NULL';
+		} elseif (is_array($val)) {
 			$args[$key] = implode(", ", array_map(array($db, 'quote'), $val));
-		} elseif (!ctype_digit($val)) {
+		} elseif (!is_int($val) && !ctype_digit($val)) {
 			$args[$key] = $db->quote($val);
 		}
 	}
@@ -74,6 +76,13 @@ function rsrc($file) {
 /** htmlspecialchars($s, ENT_QUOTES) */
 function h($s) {
 	return htmlspecialchars($s, ENT_QUOTES);
+}
+
+function optionlist($options, $selected = null) {
+	foreach ($options as $key => $val) {
+		$attrs = ($key === $selected ? " selected" : "");
+		echo "<option value='" . h($key) . "'$attrs>" . h($val) . "\n";
+	}
 }
 
 include "./html.inc.php";
