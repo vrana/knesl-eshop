@@ -8,3 +8,7 @@ function ajax(url, callback, data) {
 	request.open(data ? 'POST' : 'GET', url);
 	request.send(data || '');
 }
+
+function paymentChange(select) {
+	select.parentNode.parentNode.parentNode.className = (/^card-/.test(select.value) ? '' : 'not-card');
+}
