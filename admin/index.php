@@ -18,12 +18,15 @@ function adminer_object() {
 		
 		function login($login, $password) {
 			$db = idf_escape($this->database());
+			$connection = connection();
+			if (!$connection->result("SELECT COUNT(*) FROM $db.users WHERE username = " . q($login) . " AND password = SHA1(CONCAT(" . q($password) . ", salt)) AND admin = 1")) {
+				return false;
+			}
 			if (preg_match('~^(\d+-)+$~', "$_GET[ordered]-")) {
 				echo json_encode(get_key_vals("SELECT CONCAT('ordered-', products_id), SUM(amount) FROM $db.order_items WHERE products_id IN (" . str_replace("-", ",", $_GET["ordered"]) . ") GROUP BY products_id"));
 				exit;
 			}
-			$connection = connection();
-			return (bool) $connection->result("SELECT COUNT(*) FROM $db.users WHERE username = " . q($login) . " AND password = SHA1(CONCAT(" . q($password) . ", salt)) AND admin = 1");
+			return true;
 		}
 		
 		function fieldName($field, $order = 0) {
