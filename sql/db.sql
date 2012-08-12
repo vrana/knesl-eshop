@@ -30,6 +30,13 @@ CREATE TABLE `order_items` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
+DELIMITER ;;
+
+CREATE TRIGGER `order_items_ai` AFTER INSERT ON `order_items` FOR EACH ROW
+UPDATE products SET amount = amount - NEW.amount;;
+
+DELIMITER ;
+
 DROP TABLE IF EXISTS `orders`;
 CREATE TABLE `orders` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,

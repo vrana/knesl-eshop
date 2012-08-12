@@ -21,7 +21,7 @@ if ($_POST) {
 		query("START TRANSACTION");
 		
 		$products = array();
-		foreach (query("SELECT id, name, amount, price, visible FROM products WHERE id IN (%s) AND visible = 1 LOCK IN SHARE MODE", array_keys($basket)) as $row) {
+		foreach (query("SELECT id, name, amount, price, visible FROM products WHERE id IN (%s) AND visible = 1 FOR UPDATE", array_keys($basket)) as $row) {
 			$products[$row["id"]] = $row;
 		}
 		$error = validateOrder($products, $basket);
