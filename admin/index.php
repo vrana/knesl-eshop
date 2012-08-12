@@ -54,6 +54,13 @@ function adminer_object() {
 			return parent::editVal($val, $field);
 		}
 		
+		function editInput($table, $field, $attrs, $value) {
+			if ($table == "orders" && $field["field"] == "address") {
+				return "<textarea rows='3' cols='30'$attrs>" . h($value) . "</textarea>";
+			}
+			return parent::editInput($table, $field, $attrs, $value);
+		}
+		
 		function rowDescriptions($rows, $foreignKeys) {
 			$return = parent::rowDescriptions($rows, $foreignKeys);
 			if ($_GET["select"] == "products" && $rows) {
