@@ -1,9 +1,10 @@
 <?php
 $error = "";
 if ($_POST) {
+	$basket = $_SESSION["basket"];
 	if (!checkCSRF()) {
 		$error = "<p>Invalid CSRF token.</p>\n";
-	} elseif (!$_SESSION["basket"]) {
+	} elseif (!$basket) {
 		$error = "<p>Basket is empty.</p>\n";
 	} else {
 		if (preg_match('~^card-~', $_POST["payment_method"])) {
@@ -20,10 +21,10 @@ if ($_POST) {
 		query("START TRANSACTION");
 		
 		$products = array();
-		foreach (query("SELECT id, amount, price FROM products WHERE id IN (%s) AND visible = 1 LOCK IN SHARE MODE", array_keys($_SESSION["basket"])) as $row) {
+		foreach (query("SELECT id, name, amount, price FROM products WHERE id IN (%s) AND visible = 1 LOCK IN SHARE MODE", array_keys($basket)) as $row) {
 			$products[$row["id"]] = $row;
 		}
-		foreach ($_SESSION["basket"] as $id => $amount) {
+		foreach ($basket as $id => $amount) {
 			if (!array_key_exists($id, $products) || ($products[$id]["amount"] !== null && $products[$id]["amount"] < $amount)) {
 				$error = "<p>Not enough supply.</p>\n";
 				break;
@@ -42,7 +43,7 @@ if ($_POST) {
 			if (!$ok || !$orders_id) {
 				$error = "<p>Unable to save order.</p>";
 			} else {
-				foreach ($_SESSION["basket"] as $id => $amount) {
+				foreach ($basket as $id => $amount) {
 					$ok = query("INSERT INTO order_items (orders_id, products_id, amount, price) VALUES (%d, %d, %d, %s)",
 						$orders_id,
 						$id,
@@ -58,6 +59,22 @@ if ($_POST) {
 			if (!$error) {
 				query("COMMIT");
 				$_SESSION["basket"] = array();
+				
+				$message = "";
+				$sum = 0;
+				foreach ($basket as $id => $amount) {
+					$row = $products[$id];
+					$price = $amount * $row["price"];
+					$message .= $amount . "x $row[name] ($row[price]) = $price\n";
+					$sum += $price;
+				}
+				$message .= "\nTotal: $sum\n";
+				mail(
+					ADMIN_EMAIL,
+					"eShop - order #$orders_id",
+					$message,
+					"MIME-Version: 1.0" . PHP_EOL . "Content-Type: text/plain; charset=utf-8" . PHP_EOL . "Content-Transfer-Encoding: 8bit");
+				
 				redirect('', "Order successful.");
 			}
 		}

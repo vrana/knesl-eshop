@@ -107,3 +107,5 @@ function getOrdered(array $products_ids) {
 	}
 	return query("SELECT products_id, SUM(amount) FROM order_items WHERE products_id IN (%s) GROUP BY products_id", $products_ids)->fetchAll(PDO::FETCH_KEY_PAIR);
 }
+
+include "./constants.inc.php";
