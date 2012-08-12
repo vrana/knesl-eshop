@@ -6,7 +6,7 @@ USE eshop;
 DROP TABLE IF EXISTS `categories`;
 CREATE TABLE `categories` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `category_id` int(10) unsigned DEFAULT NULL,
+  `category_id` int(10) unsigned DEFAULT NULL COMMENT 'parent',
   `name` varchar(200) NOT NULL,
   `url` varchar(200) NOT NULL,
   PRIMARY KEY (`id`),
@@ -21,8 +21,8 @@ CREATE TABLE `order_items` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `price` decimal(10,2) NOT NULL,
   `amount` int(10) unsigned NOT NULL,
-  `orders_id` int(10) unsigned NOT NULL,
-  `products_id` int(10) unsigned NOT NULL,
+  `orders_id` int(10) unsigned NOT NULL COMMENT 'order',
+  `products_id` int(10) unsigned NOT NULL COMMENT 'product',
   PRIMARY KEY (`id`),
   KEY `fk_order_items_orders1` (`orders_id`),
   KEY `fk_order_items_products1` (`products_id`),
@@ -47,7 +47,7 @@ CREATE TABLE `orders` (
   `status` enum('untaken','unpaid','billed','paid','canceled','sent') NOT NULL DEFAULT 'untaken',
   `payment_method` enum('cash-shop','cash-mail','account-shop','account-mail','card-shop','card-mail') NOT NULL,
   `variable_number` varchar(45) NOT NULL,
-  `users_id` int(10) unsigned DEFAULT NULL,
+  `users_id` int(10) unsigned DEFAULT NULL COMMENT 'user',
   PRIMARY KEY (`id`),
   KEY `fk_orders_users1` (`users_id`),
   CONSTRAINT `fk_orders_users1` FOREIGN KEY (`users_id`) REFERENCES `users` (`id`)
@@ -69,7 +69,7 @@ CREATE TABLE `products` (
   `amount` decimal(8,0) DEFAULT NULL,
   `price` decimal(10,2) DEFAULT NULL,
   `visible` tinyint(1) NOT NULL DEFAULT '0',
-  `categories_id` int(10) unsigned NOT NULL,
+  `categories_id` int(10) unsigned NOT NULL COMMENT 'category',
   `delivery_date` varchar(50) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `fk_products_categories` (`categories_id`),

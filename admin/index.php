@@ -61,7 +61,7 @@ function friendlyUrl(s) {
 			if ($field["field"] == "created_at" && $_GET["edit"]) {
 				return "";
 			}
-			$return = parent::fieldName($field, $order);
+			$return = str_replace("_", " ", parent::fieldName($field, $order));
 			if ($_GET["select"] == "products" && $field["field"] == "amount" && $order) {
 				return "$return<th>ordered";
 			}
