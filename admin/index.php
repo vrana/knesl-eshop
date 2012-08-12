@@ -30,7 +30,11 @@ function adminer_object() {
 			if ($field["field"] == "created_at" && !$order) {
 				return "";
 			}
-			return parent::fieldName($field, $order);
+			$return = parent::fieldName($field, $order);
+			if ($_GET["select"] == "products" && $field["field"] == "amount" && $order) {
+				return "$return<th>ordered";
+			}
+			return $return;
 		}
 		
 		function editVal($val, $field) {
@@ -38,6 +42,28 @@ function adminer_object() {
 				return "";
 			}
 			return parent::editVal($val, $field);
+		}
+		
+		function rowDescriptions($rows, $foreignKeys) {
+			$return = parent::rowDescriptions($rows, $foreignKeys);
+			if ($_GET["select"] == "products" && $rows) {
+				$ordered = array();
+				foreach ($rows as $row) {
+					$ordered[$row["id"]] = "0";
+				}
+				$ordered = get_key_vals("SELECT products_id, SUM(amount) FROM order_items WHERE products_id IN (" . implode(", ", array_keys($ordered)) . ")") + $ordered;
+				foreach ($return as $key => $row) {
+					$return[$key]["amount"] = "$row[amount]<td id='ordered-$row[id]'>" . $ordered[$row["id"]];
+				}
+			}
+			return $return;
+		}
+		
+		function selectVal($val, $link, $field) {
+			if ($_GET["select"] == "products" && $field["field"] == "amount") {
+				return html_entity_decode($val, ENT_QUOTES);
+			}
+			return parent::selectVal($val, $link, $field);
 		}
 		
 	}
