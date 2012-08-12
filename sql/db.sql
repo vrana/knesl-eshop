@@ -11,7 +11,8 @@ CREATE TABLE `categories` (
   `url` varchar(200) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `url_UNIQUE` (`url`),
-  KEY `parent` (`category_id`)
+  KEY `parent` (`category_id`),
+  CONSTRAINT `categories_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 

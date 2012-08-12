@@ -30,6 +30,27 @@ function adminer_object() {
 			return true;
 		}
 		
+		function head() {
+			if ($_GET["edit"] == "categories") {
+				?>
+<script type="text/javascript">
+function friendlyUrl(s) {
+	var find = 'áčďéěíňóřšťúůýž';
+	var repl = 'acdeeinorstuuyz';
+	var map = { };
+	for (var i=0; i < find.length; i++) {
+		map[find.charAt(i)] = repl.charAt(i);
+	}
+	return s.toLowerCase().replace(new RegExp('[' + find + ']', 'g'), function (ch) {
+		return map[ch];
+	}).replace(/[^a-z0-9_]+/g, '-').replace(/^-|-$/g, '');
+}
+</script>
+<?php
+			}
+			return parent::head();
+		}
+		
 		function fieldName($field, $order = 0) {
 			if ($field["field"] == "salt") {
 				return "";
@@ -57,6 +78,9 @@ function adminer_object() {
 		function editInput($table, $field, $attrs, $value) {
 			if ($table == "orders" && $field["field"] == "address") {
 				return "<textarea rows='3' cols='30'$attrs>" . h($value) . "</textarea>";
+			}
+			if ($table == "categories" && $field["field"] == "name") {
+				return "<input value='" . h($value) . "'$attrs size='30' maxlength='$field[length]'" . ($_GET["select"] || $_GET["where"] ? "" : " onchange=\"this.form['fields[url]'].value = friendlyUrl(this.value);\"") . ">";
 			}
 			return parent::editInput($table, $field, $attrs, $value);
 		}
