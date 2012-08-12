@@ -109,3 +109,4 @@ function getOrdered(array $products_ids) {
 }
 
 include "./constants.inc.php";
+include "./model.inc.php";

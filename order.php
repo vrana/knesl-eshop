@@ -21,15 +21,10 @@ if ($_POST) {
 		query("START TRANSACTION");
 		
 		$products = array();
-		foreach (query("SELECT id, name, amount, price FROM products WHERE id IN (%s) AND visible = 1 LOCK IN SHARE MODE", array_keys($basket)) as $row) {
+		foreach (query("SELECT id, name, amount, price, visible FROM products WHERE id IN (%s) AND visible = 1 LOCK IN SHARE MODE", array_keys($basket)) as $row) {
 			$products[$row["id"]] = $row;
 		}
-		foreach ($basket as $id => $amount) {
-			if (!array_key_exists($id, $products) || ($products[$id]["amount"] !== null && $products[$id]["amount"] < $amount)) {
-				$error = "<p>Not enough supply.</p>\n";
-				break;
-			}
-		}
+		$error = validateOrder($products, $basket);
 		
 		if (!$error) {
 			$ok = query(
