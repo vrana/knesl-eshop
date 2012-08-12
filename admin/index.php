@@ -19,7 +19,7 @@ function adminer_object() {
 		function login($login, $password) {
 			$db = idf_escape($this->database());
 			if (preg_match('~^(\d+-)+$~', "$_GET[ordered]-")) {
-				echo json_encode(get_key_vals("SELECT CONCAT('ordered-', products_id), SUM(amount) FROM $db.order_items WHERE products_id IN (" . str_replace("-", ",", $_GET["ordered"]) . ")"));
+				echo json_encode(get_key_vals("SELECT CONCAT('ordered-', products_id), SUM(amount) FROM $db.order_items WHERE products_id IN (" . str_replace("-", ",", $_GET["ordered"]) . ") GROUP BY products_id"));
 				exit;
 			}
 			$connection = connection();
@@ -58,7 +58,7 @@ function adminer_object() {
 					$this->product_ids[] = $row["id"];
 					$ordered[$row["id"]] = "0";
 				}
-				$ordered = get_key_vals("SELECT products_id, SUM(amount) FROM order_items WHERE products_id IN (" . implode(", ", array_keys($ordered)) . ")") + $ordered;
+				$ordered = get_key_vals("SELECT products_id, SUM(amount) FROM order_items WHERE products_id IN (" . implode(", ", array_keys($ordered)) . ") GROUP BY products_id") + $ordered;
 				foreach ($return as $key => $row) {
 					$return[$key]["amount"] = "$row[amount]<td id='ordered-$row[id]'>" . $ordered[$row["id"]];
 				}
