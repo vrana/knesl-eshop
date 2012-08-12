@@ -51,6 +51,14 @@ function friendlyUrl(s) {
 			return parent::head();
 		}
 		
+		function backwardKeys($table, $tableName) {
+			$return = parent::backwardKeys($table, $tableName);
+			if ($table == "categories") {
+				$return[$table]["name"] = "descendants";
+			}
+			return $return;
+		}
+		
 		function fieldName($field, $order = 0) {
 			if ($field["field"] == "salt") {
 				return "";
