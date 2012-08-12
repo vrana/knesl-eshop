@@ -22,7 +22,7 @@ htmlHead($row["name"], $row["url"]);
 echo $error;
 
 foreach ($products as $id => $product) {
-	echo "<h3>" . h($product["name"]) . "</h3>\n";
+	echo "<h3 id='product-$id'>" . h($product["name"]) . "</h3>\n";
 	echo "<p>" . h($product["about"]) . "</p>\n";
 	?>
 <form action="" method="post" onsubmit="return !buySubmit('<?=href('buy/')?>', this);">

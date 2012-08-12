@@ -62,6 +62,7 @@ CREATE TABLE `products` (
   `price` decimal(10,2) DEFAULT NULL,
   `visible` tinyint(1) NOT NULL DEFAULT '0',
   `categories_id` int(10) unsigned NOT NULL,
+  `delivery_date` varchar(50) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `fk_products_categories` (`categories_id`),
   CONSTRAINT `fk_products_categories` FOREIGN KEY (`categories_id`) REFERENCES `categories` (`id`)
