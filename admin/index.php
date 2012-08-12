@@ -2,6 +2,7 @@
 function adminer_object() {
 	
 	class AdminerEshop extends Adminer {
+		var $product_ids = array();
 		
 		function name() {
 			return '<a href=".." id="h1">eShop</a>';
@@ -16,8 +17,13 @@ function adminer_object() {
 		}
 		
 		function login($login, $password) {
+			$db = idf_escape($this->database());
+			if (preg_match('~^(\d+-)+$~', "$_GET[ordered]-")) {
+				echo json_encode(get_key_vals("SELECT CONCAT('ordered-', products_id), SUM(amount) FROM $db.order_items WHERE products_id IN (" . str_replace("-", ",", $_GET["ordered"]) . ")"));
+				exit;
+			}
 			$connection = connection();
-			return (bool) $connection->result("SELECT COUNT(*) FROM " . idf_escape($this->database()) . ".users WHERE username = " . q($login) . " AND password = SHA1(CONCAT(" . q($password) . ", salt)) AND admin = 1");
+			return (bool) $connection->result("SELECT COUNT(*) FROM $db.users WHERE username = " . q($login) . " AND password = SHA1(CONCAT(" . q($password) . ", salt)) AND admin = 1");
 		}
 		
 		function fieldName($field, $order = 0) {
@@ -49,6 +55,7 @@ function adminer_object() {
 			if ($_GET["select"] == "products" && $rows) {
 				$ordered = array();
 				foreach ($rows as $row) {
+					$this->product_ids[] = $row["id"];
 					$ordered[$row["id"]] = "0";
 				}
 				$ordered = get_key_vals("SELECT products_id, SUM(amount) FROM order_items WHERE products_id IN (" . implode(", ", array_keys($ordered)) . ")") + $ordered;
@@ -64,6 +71,19 @@ function adminer_object() {
 				return html_entity_decode($val, ENT_QUOTES);
 			}
 			return parent::selectVal($val, $link, $field);
+		}
+		
+		function navigation($missing) {
+			if ($this->product_ids) {
+				?>
+<script type="text/javascript">
+setInterval(function () {
+	ajaxSetHtml('<?=js_escape(ME)?>ordered=<?=implode("-", $this->product_ids)?>');
+}, 10000);
+</script>
+<?php
+			}
+			parent::navigation($missing);
 		}
 		
 	}
